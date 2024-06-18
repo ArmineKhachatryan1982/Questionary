@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('google',[GoogleAuthController::class,'redirect'])->name('auth-google');
+Route::get('/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
+

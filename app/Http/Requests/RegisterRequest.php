@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests;
 
-
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Request;
 
 class RegisterRequest extends FormRequest
 {
@@ -24,9 +25,33 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
+        $array=[];
+        $array['password']='required|min:6|max:8';
+
+        if(!$this->nickname_or_email|| $this->nickname_or_email==null){
+
+            $array['nickname_or_email']='required';
+        }else{
+
+        if (filter_var($this->nickname_or_email, FILTER_VALIDATE_EMAIL)) {
+            // Check for unique email
+            $array['nickname_or_email']='unique:users,email';
+
+        }else{
+            $array['nickname_or_email']='unique:users,nickname';
+
+        }
+    }
+
+
+        return $array;
+
+
+    }
+    public function messages(): array
+    {
         return [
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|max:8'
+
         ];
     }
 
