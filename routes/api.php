@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\API\GetCategoryController;
+use App\Http\Controllers\API\TestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\RegisterController;
@@ -29,13 +31,16 @@ Route::group([
 ], function ($router) {
     Route::post('register',RegisterController::class);
     Route::post('login', [AuthController::class, 'login']);
+
     Route::post('logout', [AuthController::class,'logout']);
     Route::post('refresh', [AuthController::class,'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 
+    Route::group(["middleware"=> ['setlang','apiAuth']],function ($router) {
+        Route::get('get-categories', GetCategoryController::class);
+        Route::post('test',TestController::class);
 
-
-
+    });
 
 });
 Route::get('google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
