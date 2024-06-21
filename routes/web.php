@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\GoogleController;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +24,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('google',[GoogleAuthController::class,'redirect'])->name('auth-google');
-Route::get('/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
+
+Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
 
 
 Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');

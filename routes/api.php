@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\API\GetCategoryController;
+use App\Http\Controllers\API\GetTestViaLinkController;
 use App\Http\Controllers\API\TestController;
+use App\Http\Controllers\API\UserPastedTestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,8 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group([
-
-    'middleware' => 'api',
     'prefix' => 'auth'
 
 ], function ($router) {
@@ -36,15 +37,26 @@ Route::group([
     Route::post('refresh', [AuthController::class,'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 
-    Route::group(["middleware"=> ['setlang','apiAuth']],function ($router) {
+    Route::group(["middleware"=> ['setlang']],function ($router) {
+        Route::group(["middleware"=> ['apiAuth']],function ($router) {
         Route::get('get-categories', GetCategoryController::class);
         Route::post('test',TestController::class);
+        });
 
     });
 
+
 });
-Route::get('google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
-Route::get('google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
+
+Route::group(["middleware"=> ['setlang']],function ($router) {
+
+    Route::get('test/{link}',GetTestViaLinkController::class);
+    Route::post('get-test-result',UserPastedTestController::class);
+
+});
+
+Route::get('google', [GoogleController::class, 'redirectToGoogle'])->name('google-auth');
+Route::get('auth/google/call-back', [GoogleController::class, 'handleGoogleCallback']);
 
 
 

@@ -7,7 +7,7 @@ use App\Models\Test;
 use App\Trait\StoreTrait;
 use Illuminate\Http\Request;
 
-class TestController extends Controller
+class TestController extends BaseController
 {
     use StoreTrait;
     public function model()
@@ -16,12 +16,18 @@ class TestController extends Controller
     }
 
     public function __invoke(Request $request){
-     
+
         $test = $this->itemStore($request);
+        if($test==false){
 
-        if($test){
+            return $this->sendError('Upload right format file','success');
 
-          return redirect()->route('product_list');
+        }
+        else{
+
+            $returned_link = $test;
+
+            return $this->sendResponse($returned_link,'success');
         }
 
     }

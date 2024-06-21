@@ -16,5 +16,10 @@ class Category extends Model
 
         return $this->hasOne(CategoryTranslation::class)->where('lang', $lang)->first();
      }
+   
+     public function tests(){
+
+        return $this->hasMany(Test::class);
+     }
 
 }
